@@ -1,0 +1,2 @@
+include ':app', ':storyview'
+rootProject.name='StoryViewDemo'
