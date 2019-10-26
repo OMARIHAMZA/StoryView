@@ -14,11 +14,31 @@ TO BE ADDED
 #### 2. Create the StoryView
 
 ```
-new StoryView.Builder(getSupportFragmentManager())
+ ArrayList<String> images = new ArrayList<>(Arrays.asList(
+                "https://www.spruch-des-tages.org/images/sprueche/nimm-dir-zeit-fuer-die-dinge-die-dich-gluecklich-machen.jpg",
+                "http://i.imgur.com/0BfsmUd.jpg",
+                "https://mfiles.alphacoders.com/681/681242.jpg")
+        );
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+
+
+        ArrayList<Date> dates = null;
+        try {
+            dates = new ArrayList<>(Arrays.asList(
+                    simpleDateFormat.parse("26-10-2019 10:00:00"),
+                    simpleDateFormat.parse("26-10-2019 15:00:00"),
+                    simpleDateFormat.parse("25-10-2019 20:00:00")
+            ));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        new StoryView.Builder(getSupportFragmentManager())
                 .setImages(images)
                 .setTitleText("Hamza Al-Omari")
                 .setSubtitleText("Damascus")
-                .setDate(calendar.getTime())
+                .setDates(dates)
                 .setTitleLogoUrl("http://i.imgur.com/0BfsmUd.jpg")
                 .setStoryDuration(5000)
                 .build()
