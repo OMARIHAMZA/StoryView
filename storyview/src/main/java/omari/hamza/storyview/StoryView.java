@@ -123,6 +123,12 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
                 return true;
             }
         });
+        closeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissAllowingStateLoss();
+            }
+        });
     }
 
     @Override
