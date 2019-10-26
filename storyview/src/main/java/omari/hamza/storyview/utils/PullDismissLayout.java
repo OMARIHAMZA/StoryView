@@ -15,11 +15,14 @@ import androidx.core.view.MotionEventCompat;
 import androidx.core.view.ViewCompat;
 import androidx.customview.widget.ViewDragHelper;
 
+import omari.hamza.storyview.callback.TouchCallbacks;
+
 public class PullDismissLayout extends FrameLayout {
     private PullDismissLayout.Listener listener;
     private ViewDragHelper dragHelper;
     private float minFlingVelocity;
     private float verticalTouchSlop;
+    private TouchCallbacks mTouchCallbacks;
     private boolean animateAlpha;
 
     public PullDismissLayout(@NonNull Context context) {
@@ -70,11 +73,15 @@ public class PullDismissLayout extends FrameLayout {
                 final float dy = event.getY() - verticalTouchSlop;
                 if (dy > dragHelper.getTouchSlop()) {
                     pullingDown = true;
+                    mTouchCallbacks.touchPull();
+                }else{
+                    mTouchCallbacks.touchDown(event.getX());
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 verticalTouchSlop = 0.0f;
+                mTouchCallbacks.touchUp();
                 break;
         }
 
@@ -163,9 +170,16 @@ public class PullDismissLayout extends FrameLayout {
             dismissed = dragPercent >= 0.50F ||
                     (Math.abs(xv) > pullDismissLayout.minFlingVelocity && dragPercent > 0.20F);
             int finalTop = dismissed ? pullDismissLayout.getHeight() : startTop;
+            if (!dismissed){
+                pullDismissLayout.getmTouchCallbacks().touchUp();
+            }
             pullDismissLayout.dragHelper.settleCapturedViewAt(0, finalTop);
             pullDismissLayout.invalidate();
         }
+    }
+
+    public void setmTouchCallbacks(TouchCallbacks mTouchCallbacks) {
+        this.mTouchCallbacks = mTouchCallbacks;
     }
 
     public interface Listener {
@@ -184,5 +198,9 @@ public class PullDismissLayout extends FrameLayout {
          * false for allow PullDismissLayout handle event
          */
         boolean onShouldInterceptTouchEvent();
+    }
+
+    public TouchCallbacks getmTouchCallbacks() {
+        return mTouchCallbacks;
     }
 }

@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import omari.hamza.storyview.StoryView;
-import omari.hamza.storyview.utils.StoryViewHeaderInfo;
 import omari.hamza.storyviewdemo.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {

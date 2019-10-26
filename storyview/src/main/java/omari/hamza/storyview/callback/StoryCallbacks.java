@@ -1,4 +1,4 @@
-package omari.hamza.storyview;
+package omari.hamza.storyview.callback;
 
 public interface StoryCallbacks {
 

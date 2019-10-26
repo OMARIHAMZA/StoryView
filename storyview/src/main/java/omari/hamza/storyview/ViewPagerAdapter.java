@@ -19,6 +19,8 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
+import omari.hamza.storyview.callback.StoryCallbacks;
+
 public class ViewPagerAdapter extends PagerAdapter {
 
     private ArrayList<String> images;

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,12 +27,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import omari.hamza.storyview.callback.StoryCallbacks;
+import omari.hamza.storyview.callback.TouchCallbacks;
 import omari.hamza.storyview.progress.StoriesProgressView;
+import omari.hamza.storyview.utils.PullDismissLayout;
 import omari.hamza.storyview.utils.StoryViewHeaderInfo;
 
 import static omari.hamza.storyview.utils.Utils.getDurationBetweenDates;
 
-public class StoryView extends DialogFragment implements StoriesProgressView.StoriesListener, StoryCallbacks {
+public class StoryView extends DialogFragment implements StoriesProgressView.StoriesListener,
+        StoryCallbacks,
+        PullDismissLayout.Listener,
+        TouchCallbacks {
 
     private static final String TAG = StoryView.class.getSimpleName();
 
@@ -62,6 +69,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private long elapsedTime = 0;
     private Thread timerThread;
     private boolean isPaused = false;
+    private int width;
+    private float xValue = 0;
 
     private StoryView() {
     }
@@ -75,11 +84,13 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        width = displaymetrics.widthPixels;
         // Get field from view
         findViewsById(view);
         readArguments();
         setupStories();
-        detectTouchEvents();
     }
 
     private void setupStories() {
@@ -96,6 +107,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     }
 
     private void findViewsById(View view) {
+        ((PullDismissLayout) view.findViewById(R.id.pull_dismiss_layout)).setListener(this);
+        ((PullDismissLayout) view.findViewById(R.id.pull_dismiss_layout)).setmTouchCallbacks(this);
         storiesProgressView = view.findViewById(R.id.storiesProgressView);
         mViewPager = view.findViewById(R.id.storiesViewPager);
         titleTextView = view.findViewById(R.id.title_textView);
@@ -104,6 +117,12 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         titleCardView = view.findViewById(R.id.titleCardView);
         closeImageButton = view.findViewById(R.id.imageButton);
         storiesProgressView.setStoriesListener(this);
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
     }
 
     @Override
@@ -145,7 +164,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private void previousStory() {
         if (counter - 1 < 0) return;
-        mViewPager.setCurrentItem(--counter);
+        mViewPager.setCurrentItem(--counter, false);
         storiesProgressView.startStories(counter);
     }
 
@@ -155,7 +174,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             dismissAllowingStateLoss();
             return;
         }
-        mViewPager.setCurrentItem(++counter);
+        mViewPager.setCurrentItem(++counter, false);
         storiesProgressView.startStories(counter);
     }
 
@@ -194,44 +213,12 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         }
     }
 
-    private void detectTouchEvents() {
-        if (getActivity() == null) return;
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        final int width = displaymetrics.widthPixels;
-        //noinspection all
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float xValue = event.getX();
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (!isDownClick) {
-                        runTimer();
-                    }
-                    return true;
-                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                    stopTimer();
-                    if (elapsedTime < 500) {
-                        if ((int) xValue <= (width / 2)) {
-                            //Left
-                            previousStory();
-                        } else {
-                            //Right
-                            nextStory();
-                        }
-                    }
-                    elapsedTime = 0;
-                }
-                return true;
-            }
-        });
-    }
-
     private void setHeadingVisibility(int visibility) {
         titleTextView.setVisibility(visibility);
         titleCardView.setVisibility(visibility);
         subtitleTextView.setVisibility(visibility);
         closeImageButton.setVisibility(visibility);
+        storiesProgressView.setVisibility(visibility);
     }
 
 
@@ -260,6 +247,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
                 }
                 isPaused = false;
                 if (getActivity() == null) return;
+                if (elapsedTime < 500) return;
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -279,6 +267,50 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private void stopTimer() {
         isDownClick = false;
+    }
+
+    @Override
+    public void onDismissed() {
+        dismissAllowingStateLoss();
+    }
+
+    @Override
+    public boolean onShouldInterceptTouchEvent() {
+        return false;
+    }
+
+    @Override
+    public void touchPull() {
+        elapsedTime = 0;
+        stopTimer();
+        storiesProgressView.pause();
+    }
+
+    @Override
+    public void touchDown(float xValue) {
+        this.xValue = xValue;
+        if (!isDownClick) {
+            runTimer();
+        }
+    }
+
+    @Override
+    public void touchUp() {
+        if (isDownClick && elapsedTime < 500) {
+            stopTimer();
+            if ((int) xValue <= (width / 2)) {
+                //Left
+                previousStory();
+            } else {
+                //Right
+                nextStory();
+            }
+        } else {
+            stopTimer();
+            setHeadingVisibility(View.VISIBLE);
+            storiesProgressView.resume();
+        }
+        elapsedTime = 0;
     }
 
     public static class Builder {
@@ -326,11 +358,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
         public Builder build() {
             if (storyView != null) {
-                try {
-                    throw new Exception("The StoryView has already been built!");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Log.e(TAG, "The StoryView has already been built!");
                 return this;
             }
             storyView = new StoryView();
