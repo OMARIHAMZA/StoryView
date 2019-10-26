@@ -14,7 +14,7 @@ TO BE ADDED
 #### 2. Create the StoryView
 
 ```
- ArrayList<String> images = new ArrayList<>(Arrays.asList(
+        ArrayList<String> images = new ArrayList<>(Arrays.asList(
                 "LINK A",
                 "LINK B",
                 "LINK C")
