@@ -1,5 +1,6 @@
 package omari.hamza.storyview;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
@@ -75,6 +77,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private StoryView() {
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

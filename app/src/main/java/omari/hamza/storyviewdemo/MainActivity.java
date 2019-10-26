@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public void showStories() {
         ArrayList<String> images = new ArrayList<>(Arrays.asList(
                 "https://www.spruch-des-tages.org/images/sprueche/nimm-dir-zeit-fuer-die-dinge-die-dich-gluecklich-machen.jpg",
-                "https://wallpaperaccess.com/full/803962.jpg",
+                "http://i.imgur.com/0BfsmUd.jpg",
                 "https://mfiles.alphacoders.com/681/681242.jpg")
         );
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         new StoryView.Builder(getSupportFragmentManager())
                 .setImages(images)
                 .setTitleText("Hamza Al-Omari")
-                .setSubtitleText("Berlin")
+                .setSubtitleText("Damascus")
                 .setDate(calendar.getTime())
                 .setTitleLogoUrl("https://scontent-amt2-1.xx.fbcdn.net/v/t1.0-1/p160x160/39992298_1709076109202448_8167947883299995648_n.jpg?_nc_cat=106&_nc_oc=AQmES4AmTCqzNzXatJvOBc5U2ZyU8SNxwkeZmxUmZIt96pNdKjPCsHG1MJfbN_SJ6eU&_nc_ht=scontent-amt2-1.xx&oh=8063cb8bdd3c01b71cb920f22dc8c081&oe=5E201FFB")
                 .setStoryDuration(5000)
