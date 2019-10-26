@@ -3,6 +3,7 @@ package omari.hamza.storyview.utils;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class StoryViewHeaderInfo implements Serializable {
@@ -14,7 +15,7 @@ public class StoryViewHeaderInfo implements Serializable {
     private String subtitle;
 
     @Nullable
-    private Date date;
+    private ArrayList<Date> dates;
 
     @Nullable
     private String titleIconUrl;
@@ -24,10 +25,10 @@ public class StoryViewHeaderInfo implements Serializable {
     }
 
 
-    public StoryViewHeaderInfo(@Nullable String title, @Nullable String subtitle, @Nullable Date date, @Nullable String titleIconUrl) {
+    public StoryViewHeaderInfo(@Nullable String title, @Nullable String subtitle, @Nullable ArrayList<Date> dates, @Nullable String titleIconUrl) {
         this.title = title;
         this.subtitle = subtitle;
-        this.date = date;
+        this.dates = dates;
         this.titleIconUrl = titleIconUrl;
     }
 
@@ -51,12 +52,12 @@ public class StoryViewHeaderInfo implements Serializable {
     }
 
     @Nullable
-    public Date getDate() {
-        return date;
+    public ArrayList<Date> getDates() {
+        return dates;
     }
 
-    public void setDate(@Nullable Date date) {
-        this.date = date;
+    public void setDates(@Nullable ArrayList<Date> dates) {
+        this.dates = dates;
     }
 
     @Nullable

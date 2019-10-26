@@ -1,6 +1,5 @@
 package omari.hamza.storyview;
 
-import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,13 +9,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
@@ -101,7 +98,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private void setupStories() {
         storiesProgressView.setStoriesCount(images.size());
         storiesProgressView.setStoryDuration(duration);
-        displayHeading();
+        updateHeading();
         mViewPager.setAdapter(new ViewPagerAdapter(images, getContext(), this));
     }
 
@@ -148,13 +145,14 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     @Override
     public void onNext() {
         mViewPager.setCurrentItem(++counter, false);
-        displayHeading();
+        updateHeading();
     }
 
     @Override
     public void onPrev() {
         if (counter <= 0) return;
         mViewPager.setCurrentItem(--counter, false);
+        updateHeading();
     }
 
     @Override
@@ -165,6 +163,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     @Override
     public void startStories() {
         storiesProgressView.startStories();
+        updateHeading();
     }
 
     @Override
@@ -178,6 +177,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         storiesProgressView.setStoriesCount(images.size());
         storiesProgressView.setStoryDuration(duration);
         storiesProgressView.startStories(counter);
+        updateHeading();
     }
 
     @Override
@@ -188,6 +188,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         }
         mViewPager.setCurrentItem(++counter, false);
         storiesProgressView.startStories(counter);
+        updateHeading();
     }
 
     @Override
@@ -198,29 +199,29 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         super.onDestroy();
     }
 
-    private void displayHeading() {
-        StoryViewHeaderInfo currentStory = (StoryViewHeaderInfo) getArguments().getSerializable(HEADER_INFO_KEY);
-        if (currentStory == null) return;
+    private void updateHeading() {
+        StoryViewHeaderInfo storyHeaderInfo = (StoryViewHeaderInfo) getArguments().getSerializable(HEADER_INFO_KEY);
+        if (storyHeaderInfo == null) return;
 
-        if (currentStory.getTitleIconUrl() != null) {
+        if (storyHeaderInfo.getTitleIconUrl() != null) {
             titleCardView.setVisibility(View.VISIBLE);
             if (getContext() == null) return;
             Glide.with(getContext())
-                    .load(currentStory.getTitleIconUrl())
+                    .load(storyHeaderInfo.getTitleIconUrl())
                     .into(titleIconImageView);
         }
-        if (currentStory.getTitle() != null) {
+        if (storyHeaderInfo.getTitle() != null) {
             titleTextView.setVisibility(View.VISIBLE);
-            titleTextView.setText(currentStory.getTitle());
+            titleTextView.setText(storyHeaderInfo.getTitle());
         }
-        if (currentStory.getSubtitle() != null) {
+        if (storyHeaderInfo.getSubtitle() != null) {
             subtitleTextView.setVisibility(View.VISIBLE);
-            subtitleTextView.setText(currentStory.getSubtitle());
+            subtitleTextView.setText(storyHeaderInfo.getSubtitle());
         }
-        if (currentStory.getDate() != null) {
+        if (storyHeaderInfo.getDates().get(counter) != null) {
             titleTextView.setText(titleTextView.getText()
                     + " "
-                    + getDurationBetweenDates(currentStory.getDate(), Calendar.getInstance().getTime())
+                    + getDurationBetweenDates(storyHeaderInfo.getDates().get(counter), Calendar.getInstance().getTime())
             );
         }
     }
@@ -358,8 +359,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             return this;
         }
 
-        public Builder setDate(Date date) {
-            storyViewHeaderInfo.setDate(date);
+        public Builder setDates(ArrayList<Date> date) {
+            storyViewHeaderInfo.setDates(date);
             return this;
         }
 
