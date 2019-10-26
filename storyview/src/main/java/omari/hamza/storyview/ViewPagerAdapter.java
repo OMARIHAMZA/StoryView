@@ -19,16 +19,14 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
-import omari.hamza.storyview.utils.MyStory;
-
 public class ViewPagerAdapter extends PagerAdapter {
 
-    private ArrayList<MyStory> images;
+    private ArrayList<String> images;
     private Context context;
     private StoryCallbacks storyCallbacks;
     private boolean storiesStarted = false;
 
-    ViewPagerAdapter(ArrayList<MyStory> images, Context context, StoryCallbacks storyCallbacks) {
+    ViewPagerAdapter(ArrayList<String> images, Context context, StoryCallbacks storyCallbacks) {
         this.images = images;
         this.context = context;
         this.storyCallbacks = storyCallbacks;
@@ -51,7 +49,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        String currentImage = images.get(position).getImageUrl();
+        String currentImage = images.get(position);
 
         View view = inflater.inflate(R.layout.layout_story_item, collection, false);
 

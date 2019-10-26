@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/materialCardView"
+        android:id="@+id/titleCardView"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -59,12 +59,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="Berlin"
         android:textSize="12sp"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/materialCardView"
+        app:layout_constraintBottom_toBottomOf="@+id/titleCardView"
         app:layout_constraintEnd_toEndOf="@+id/title_textView"
-        app:layout_constraintStart_toEndOf="@+id/materialCardView"
+        app:layout_constraintStart_toEndOf="@+id/titleCardView"
         app:layout_constraintTop_toBottomOf="@+id/title_textView" />
 
     <TextView
@@ -73,11 +74,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="Hamza Al-Omari 2h"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/subtitle_textView"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
-        app:layout_constraintStart_toEndOf="@+id/materialCardView"
+        app:layout_constraintStart_toEndOf="@+id/titleCardView"
         app:layout_constraintTop_toBottomOf="@+id/storiesProgressView" />
 
     <ImageButton
