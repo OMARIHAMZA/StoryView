@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import omari.hamza.storyview.StoryView;
+import omari.hamza.storyview.utils.MyStory;
 import omari.hamza.storyviewdemo.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +28,6 @@ public class MainActivity extends AppCompatActivity {
                 "https://wallpaperaccess.com/full/755169.jpg",
                 "https://mfiles.alphacoders.com/681/681242.jpg")
         );
-        StoryView.showStories(getSupportFragmentManager(), images);
+        StoryView.showStories(getSupportFragmentManager(), MyStory.toStories(images));
     }
 }

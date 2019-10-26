@@ -17,12 +17,13 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 
 import omari.hamza.storyview.progress.StoriesProgressView;
+import omari.hamza.storyview.utils.MyStory;
 
 public class StoryView extends DialogFragment implements StoriesProgressView.StoriesListener, StoryCallbacks {
 
     private static final String TAG = StoryView.class.getSimpleName();
 
-    private ArrayList<String> images; //Images' URL
+    private ArrayList<MyStory> stories; //Images' URL
 
     private final static String IMAGES_KEY = "IMAGES";
 
@@ -36,7 +37,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private int counter = 0;
 
-    public static void showStories(FragmentManager fragmentManager, ArrayList<String> images) {
+    public static void showStories(FragmentManager fragmentManager, ArrayList<MyStory> images) {
         StoryView storyView = new StoryView();
         Bundle bundle = new Bundle();
         bundle.putSerializable(IMAGES_KEY, images);
@@ -69,14 +70,14 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     }
 
     private void setupStories() {
-        storiesProgressView.setStoriesCount(images.size());
+        storiesProgressView.setStoriesCount(stories.size());
         storiesProgressView.setStoryDuration(duration);
-        mViewPager.setAdapter(new ViewPagerAdapter(images, getContext(), this));
+        mViewPager.setAdapter(new ViewPagerAdapter(stories, getContext(), this));
     }
 
     private void readArguments() {
         assert getArguments() != null;
-        images = (ArrayList<String>) getArguments().getSerializable(IMAGES_KEY);
+        stories = (ArrayList<MyStory>) getArguments().getSerializable(IMAGES_KEY);
         duration = getArguments().getLong(DURATION_KEY, 2000);
     }
 
