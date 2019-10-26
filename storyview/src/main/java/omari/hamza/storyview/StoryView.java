@@ -165,6 +165,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private void previousStory() {
         if (counter - 1 < 0) return;
         mViewPager.setCurrentItem(--counter, false);
+        storiesProgressView.setStoriesCount(images.size());
+        storiesProgressView.setStoryDuration(duration);
         storiesProgressView.startStories(counter);
     }
 
