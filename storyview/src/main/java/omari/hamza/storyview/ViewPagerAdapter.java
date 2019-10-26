@@ -1,6 +1,8 @@
 package omari.hamza.storyview;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.bumptech.glide.request.target.Target;
 import java.util.ArrayList;
 
 import omari.hamza.storyview.callback.StoryCallbacks;
+import omari.hamza.storyview.utils.PaletteExtraction;
 
 public class ViewPagerAdapter extends PagerAdapter {
 
@@ -53,7 +56,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         String currentImage = images.get(position);
 
-        View view = inflater.inflate(R.layout.layout_story_item, collection, false);
+        final View view = inflater.inflate(R.layout.layout_story_item, collection, false);
 
         final ImageView mImageView = view.findViewById(R.id.mImageView);
 
@@ -68,13 +71,19 @@ public class ViewPagerAdapter extends PagerAdapter {
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        if (!storiesStarted){
+                        if (resource != null) {
+                            PaletteExtraction pe = new PaletteExtraction(view.findViewById(R.id.relativeLayout),
+                                    ((BitmapDrawable) resource).getBitmap());
+                            pe.execute();
+                        }
+                        if (!storiesStarted) {
                             storiesStarted = true;
                             storyCallbacks.startStories();
                         }
                         return false;
                     }
-                }).into(mImageView);
+                })
+                .into(mImageView);
 
         collection.addView(view);
 

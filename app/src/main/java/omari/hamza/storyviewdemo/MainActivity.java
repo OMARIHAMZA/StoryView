@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void showStories() {
         ArrayList<String> images = new ArrayList<>(Arrays.asList(
-                "https://i.pinimg.com/originals/6a/45/3d/6a453dcf8af8d13d648743aad173e317.jpg",
-                "https://wallpaperaccess.com/full/755169.jpg",
+                "https://www.spruch-des-tages.org/images/sprueche/nimm-dir-zeit-fuer-die-dinge-die-dich-gluecklich-machen.jpg",
+                "https://wallpaperaccess.com/full/803962.jpg",
                 "https://mfiles.alphacoders.com/681/681242.jpg")
         );
 

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -78,6 +79,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return inflater.inflate(R.layout.dialog_stories, container);
     }
 
@@ -138,19 +140,18 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         getDialog().getWindow().setAttributes(params);
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
     @Override
     public void onNext() {
-        mViewPager.setCurrentItem(++counter);
+        mViewPager.setCurrentItem(++counter, false);
         displayHeading();
     }
 
     @Override
     public void onPrev() {
         if (counter <= 0) return;
-        mViewPager.setCurrentItem(--counter);
+        mViewPager.setCurrentItem(--counter, false);
     }
 
     @Override
