@@ -15,9 +15,9 @@ TO BE ADDED
 
 ```
  ArrayList<String> images = new ArrayList<>(Arrays.asList(
-                "https://www.spruch-des-tages.org/images/sprueche/nimm-dir-zeit-fuer-die-dinge-die-dich-gluecklich-machen.jpg",
-                "http://i.imgur.com/0BfsmUd.jpg",
-                "https://mfiles.alphacoders.com/681/681242.jpg")
+                "LINK A",
+                "LINK B",
+                "LINK C")
         );
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
