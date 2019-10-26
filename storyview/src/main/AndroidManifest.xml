@@ -1,2 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="omari.hamza.storyview" />
+    package="omari.hamza.storyview">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>

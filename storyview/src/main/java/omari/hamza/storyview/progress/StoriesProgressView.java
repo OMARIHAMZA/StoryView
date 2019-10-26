@@ -242,4 +242,5 @@ public class StoriesProgressView extends LinearLayout {
         if (current < 0) return;
         progressBars.get(current).resumeProgress();
     }
+
 }

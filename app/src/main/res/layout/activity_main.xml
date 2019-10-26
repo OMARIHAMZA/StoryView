@@ -8,9 +8,23 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> activity.showStories()}"
+            android:text="Show"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <data>
+
+        <variable
+            name="activity"
+            type="omari.hamza.storyviewdemo.MainActivity" />
 
     </data>
 </layout>
