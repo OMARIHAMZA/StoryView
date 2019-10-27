@@ -29,9 +29,11 @@ import java.util.Date;
 
 import omari.hamza.storyview.callback.StoryCallbacks;
 import omari.hamza.storyview.callback.TouchCallbacks;
+import omari.hamza.storyview.model.MyStory;
 import omari.hamza.storyview.progress.StoriesProgressView;
 import omari.hamza.storyview.utils.PullDismissLayout;
 import omari.hamza.storyview.utils.StoryViewHeaderInfo;
+import omari.hamza.storyview.utils.ViewPagerAdapter;
 
 import static omari.hamza.storyview.utils.Utils.getDurationBetweenDates;
 
@@ -42,7 +44,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private static final String TAG = StoryView.class.getSimpleName();
 
-    private ArrayList<String> images; //Images' URL
+    private ArrayList<MyStory> storiesList;
 
     private final static String IMAGES_KEY = "IMAGES";
 
@@ -96,15 +98,15 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     }
 
     private void setupStories() {
-        storiesProgressView.setStoriesCount(images.size());
+        storiesProgressView.setStoriesCount(storiesList.size());
         storiesProgressView.setStoryDuration(duration);
         updateHeading();
-        mViewPager.setAdapter(new ViewPagerAdapter(images, getContext(), this));
+        mViewPager.setAdapter(new ViewPagerAdapter(storiesList, getContext(), this));
     }
 
     private void readArguments() {
         assert getArguments() != null;
-        images = (ArrayList<String>) getArguments().getSerializable(IMAGES_KEY);
+        storiesList = (ArrayList<MyStory>) getArguments().getSerializable(IMAGES_KEY);
         duration = getArguments().getLong(DURATION_KEY, 2000);
     }
 
@@ -174,7 +176,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private void previousStory() {
         if (counter - 1 < 0) return;
         mViewPager.setCurrentItem(--counter, false);
-        storiesProgressView.setStoriesCount(images.size());
+        storiesProgressView.setStoriesCount(storiesList.size());
         storiesProgressView.setStoryDuration(duration);
         storiesProgressView.startStories(counter);
         updateHeading();
@@ -182,7 +184,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     @Override
     public void nextStory() {
-        if (counter + 1 >= images.size()) {
+        if (counter + 1 >= storiesList.size()) {
             dismissAllowingStateLoss();
             return;
         }
@@ -194,7 +196,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     @Override
     public void onDestroy() {
         timerThread = null;
-        images = null;
+        storiesList = null;
         storiesProgressView.destroy();
         super.onDestroy();
     }
@@ -218,10 +220,10 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             subtitleTextView.setVisibility(View.VISIBLE);
             subtitleTextView.setText(storyHeaderInfo.getSubtitle());
         }
-        if (storyHeaderInfo.getDates().get(counter) != null) {
+        if (storiesList.get(counter).getDate() != null) {
             titleTextView.setText(titleTextView.getText()
                     + " "
-                    + getDurationBetweenDates(storyHeaderInfo.getDates().get(counter), Calendar.getInstance().getTime())
+                    + getDurationBetweenDates(storiesList.get(counter).getDate(), Calendar.getInstance().getTime())
             );
         }
     }
@@ -339,8 +341,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             this.storyViewHeaderInfo = new StoryViewHeaderInfo();
         }
 
-        public Builder setImages(ArrayList<String> imagesUrls) {
-            bundle.putSerializable(IMAGES_KEY, imagesUrls);
+        public Builder setStoriesList(ArrayList<MyStory> storiesList) {
+            bundle.putSerializable(IMAGES_KEY, storiesList);
             return this;
         }
 
@@ -356,11 +358,6 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
         public Builder setTitleLogoUrl(String url) {
             storyViewHeaderInfo.setTitleIconUrl(url);
-            return this;
-        }
-
-        public Builder setDates(ArrayList<Date> date) {
-            storyViewHeaderInfo.setDates(date);
             return this;
         }
 

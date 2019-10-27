@@ -15,9 +15,6 @@ public class StoryViewHeaderInfo implements Serializable {
     private String subtitle;
 
     @Nullable
-    private ArrayList<Date> dates;
-
-    @Nullable
     private String titleIconUrl;
 
 
@@ -25,10 +22,9 @@ public class StoryViewHeaderInfo implements Serializable {
     }
 
 
-    public StoryViewHeaderInfo(@Nullable String title, @Nullable String subtitle, @Nullable ArrayList<Date> dates, @Nullable String titleIconUrl) {
+    public StoryViewHeaderInfo(@Nullable String title, @Nullable String subtitle, @Nullable String titleIconUrl) {
         this.title = title;
         this.subtitle = subtitle;
-        this.dates = dates;
         this.titleIconUrl = titleIconUrl;
     }
 
@@ -49,15 +45,6 @@ public class StoryViewHeaderInfo implements Serializable {
 
     public void setSubtitle(@Nullable String subtitle) {
         this.subtitle = subtitle;
-    }
-
-    @Nullable
-    public ArrayList<Date> getDates() {
-        return dates;
-    }
-
-    public void setDates(@Nullable ArrayList<Date> dates) {
-        this.dates = dates;
     }
 
     @Nullable

@@ -1,7 +1,6 @@
-package omari.hamza.storyview;
+package omari.hamza.storyview.utils;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -21,17 +20,18 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
+import omari.hamza.storyview.R;
 import omari.hamza.storyview.callback.StoryCallbacks;
-import omari.hamza.storyview.utils.PaletteExtraction;
+import omari.hamza.storyview.model.MyStory;
 
 public class ViewPagerAdapter extends PagerAdapter {
 
-    private ArrayList<String> images;
+    private ArrayList<MyStory> images;
     private Context context;
     private StoryCallbacks storyCallbacks;
     private boolean storiesStarted = false;
 
-    ViewPagerAdapter(ArrayList<String> images, Context context, StoryCallbacks storyCallbacks) {
+    public ViewPagerAdapter(ArrayList<MyStory> images, Context context, StoryCallbacks storyCallbacks) {
         this.images = images;
         this.context = context;
         this.storyCallbacks = storyCallbacks;
@@ -54,14 +54,14 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        String currentImage = images.get(position);
+        MyStory currentPair = images.get(position);
 
         final View view = inflater.inflate(R.layout.layout_story_item, collection, false);
 
         final ImageView mImageView = view.findViewById(R.id.mImageView);
 
         Glide.with(context)
-                .load(currentImage)
+                .load(currentPair.getUrl())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
