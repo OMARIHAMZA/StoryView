@@ -9,8 +9,21 @@
 
 #### 1. Add the gradle dependency
 
-TO BE ADDED
-
+Add JitPack repository to your root build.gradle at the end of repositories:
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+Add the dependency:
+```
+dependencies {
+	        implementation 'com.github.OMARIHAMZA:StoryView:1.0.0-alpha'
+	}
+```
 #### 2. Create the StoryView
 
 ```
