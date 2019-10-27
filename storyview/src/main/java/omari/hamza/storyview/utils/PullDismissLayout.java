@@ -75,7 +75,7 @@ public class PullDismissLayout extends FrameLayout {
                     pullingDown = true;
                     mTouchCallbacks.touchPull();
                 }else{
-                    mTouchCallbacks.touchDown(event.getX());
+                    mTouchCallbacks.touchDown(event.getX(), event.getY());
                 }
                 break;
             case MotionEvent.ACTION_UP:

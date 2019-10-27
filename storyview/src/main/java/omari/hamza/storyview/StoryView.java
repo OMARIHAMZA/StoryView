@@ -25,7 +25,6 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import omari.hamza.storyview.callback.StoryCallbacks;
 import omari.hamza.storyview.callback.TouchCallbacks;
@@ -71,8 +70,10 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private long elapsedTime = 0;
     private Thread timerThread;
     private boolean isPaused = false;
-    private int width;
-    private float xValue = 0;
+    private int width, height;
+    private float xValue = 0, yValue = 0;
+
+    private View.OnClickListener headerLogoOnClickListener;
 
     private StoryView() {
     }
@@ -91,8 +92,9 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         width = displaymetrics.widthPixels;
+        height = displaymetrics.heightPixels;
         // Get field from view
-        findViewsById(view);
+        setupViews(view);
         readArguments();
         setupStories();
     }
@@ -110,7 +112,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         duration = getArguments().getLong(DURATION_KEY, 2000);
     }
 
-    private void findViewsById(View view) {
+    private void setupViews(View view) {
         ((PullDismissLayout) view.findViewById(R.id.pull_dismiss_layout)).setListener(this);
         ((PullDismissLayout) view.findViewById(R.id.pull_dismiss_layout)).setmTouchCallbacks(this);
         storiesProgressView = view.findViewById(R.id.storiesProgressView);
@@ -133,6 +135,9 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
                 dismissAllowingStateLoss();
             }
         });
+        if (headerLogoOnClickListener != null) {
+            titleCardView.setOnClickListener(headerLogoOnClickListener);
+        }
     }
 
     @Override
@@ -302,8 +307,9 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     }
 
     @Override
-    public void touchDown(float xValue) {
+    public void touchDown(float xValue, float yValue) {
         this.xValue = xValue;
+        this.yValue = yValue;
         if (!isDownClick) {
             runTimer();
         }
@@ -313,12 +319,14 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     public void touchUp() {
         if (isDownClick && elapsedTime < 500) {
             stopTimer();
-            if ((int) xValue <= (width / 2)) {
-                //Left
-                previousStory();
-            } else {
-                //Right
-                nextStory();
+            if (((int) (height - yValue) <= 0.8 * height)) {
+                if ((int) xValue <= (width / 2)) {
+                    //Left
+                    previousStory();
+                } else {
+                    //Right
+                    nextStory();
+                }
             }
         } else {
             stopTimer();
@@ -328,12 +336,17 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         elapsedTime = 0;
     }
 
+    public void setHeaderLogoOnClickListener(View.OnClickListener headerLogoOnClickListener) {
+        this.headerLogoOnClickListener = headerLogoOnClickListener;
+    }
+
     public static class Builder {
 
         private StoryView storyView;
         private FragmentManager fragmentManager;
         private Bundle bundle;
         private StoryViewHeaderInfo storyViewHeaderInfo;
+        private View.OnClickListener headerLogoClickListener;
 
         public Builder(FragmentManager fragmentManager) {
             this.fragmentManager = fragmentManager;
@@ -374,6 +387,14 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             storyView = new StoryView();
             bundle.putSerializable(HEADER_INFO_KEY, storyViewHeaderInfo);
             storyView.setArguments(bundle);
+            if (headerLogoClickListener != null) {
+                storyView.setHeaderLogoOnClickListener(headerLogoClickListener);
+            }
+            return this;
+        }
+
+        public Builder setHeaderLogoClickListener(View.OnClickListener onClickListener) {
+            this.headerLogoClickListener = onClickListener;
             return this;
         }
 

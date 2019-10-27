@@ -1,7 +1,6 @@
 package omari.hamza.storyview.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MyStory implements Serializable {
@@ -16,6 +15,15 @@ public class MyStory implements Serializable {
         this.url = url;
         this.date = date;
         this.description = description;
+    }
+
+    public MyStory(String url, Date date) {
+        this.url = url;
+        this.date = date;
+    }
+
+    public MyStory(String url) {
+        this.url = url;
     }
 
     public MyStory() {

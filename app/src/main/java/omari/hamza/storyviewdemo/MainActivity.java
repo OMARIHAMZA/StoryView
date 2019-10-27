@@ -1,6 +1,8 @@
 package omari.hamza.storyviewdemo;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -33,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             MyStory story1 = new MyStory(
                     "https://www.spruch-des-tages.org/images/sprueche/nimm-dir-zeit-fuer-die-dinge-die-dich-gluecklich-machen.jpg",
-                    simpleDateFormat.parse("26-10-2019 10:00:00"),
-                    "German Wisdom"
+                    simpleDateFormat.parse("26-10-2019 10:00:00")
             );
             myStories.add(story1);
         } catch (ParseException e) {
@@ -52,16 +53,10 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        try {
-            MyStory story3 = new MyStory(
-                    "https://mfiles.alphacoders.com/681/681242.jpg",
-                    simpleDateFormat.parse("25-10-2019 20:00:00"),
-                    "What a view!"
-            );
-            myStories.add(story3);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        MyStory story3 = new MyStory(
+                "https://mfiles.alphacoders.com/681/681242.jpg"
+        );
+        myStories.add(story3);
 
 
         new StoryView.Builder(getSupportFragmentManager())
@@ -70,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
                 .setSubtitleText("Damascus")
                 .setTitleLogoUrl("https://scontent-amt2-1.xx.fbcdn.net/v/t1.0-1/p160x160/39992298_1709076109202448_8167947883299995648_n.jpg?_nc_cat=106&_nc_oc=AQmES4AmTCqzNzXatJvOBc5U2ZyU8SNxwkeZmxUmZIt96pNdKjPCsHG1MJfbN_SJ6eU&_nc_ht=scontent-amt2-1.xx&oh=8063cb8bdd3c01b71cb920f22dc8c081&oe=5E201FFB")
                 .setStoryDuration(5000)
+                .setHeaderLogoClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(MainActivity.this, "Hey", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .build()
                 .show();
 

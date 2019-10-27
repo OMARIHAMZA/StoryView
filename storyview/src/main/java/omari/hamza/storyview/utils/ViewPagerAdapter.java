@@ -3,6 +3,7 @@ package omari.hamza.storyview.utils;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         final ImageView mImageView = view.findViewById(R.id.mImageView);
 
-        if (currentStory.getDescription() != null) {
+        if (!TextUtils.isEmpty(currentStory.getDescription())) {
             TextView textView = view.findViewById(R.id.descriptionTextView);
             textView.setVisibility(View.VISIBLE);
             textView.setText(currentStory.getDescription());
