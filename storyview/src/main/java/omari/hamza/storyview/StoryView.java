@@ -220,7 +220,17 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     }
 
     private void updateHeading() {
-        StoryViewHeaderInfo storyHeaderInfo = (StoryViewHeaderInfo) getArguments().getSerializable(HEADER_INFO_KEY);
+
+        Object object = getArguments().getSerializable(HEADER_INFO_KEY);
+
+        StoryViewHeaderInfo storyHeaderInfo = null;
+
+        if (object instanceof StoryViewHeaderInfo) {
+            storyHeaderInfo = (StoryViewHeaderInfo) object;
+        } else if (object instanceof ArrayList) {
+            storyHeaderInfo = ((ArrayList<StoryViewHeaderInfo>) object).get(counter);
+        }
+
         if (storyHeaderInfo == null) return;
 
         if (storyHeaderInfo.getTitleIconUrl() != null) {
@@ -229,15 +239,24 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             Glide.with(getContext())
                     .load(storyHeaderInfo.getTitleIconUrl())
                     .into(titleIconImageView);
+        } else {
+            titleCardView.setVisibility(View.GONE);
         }
+
         if (storyHeaderInfo.getTitle() != null) {
             titleTextView.setVisibility(View.VISIBLE);
             titleTextView.setText(storyHeaderInfo.getTitle());
+        } else {
+            titleTextView.setVisibility(View.GONE);
         }
+
         if (storyHeaderInfo.getSubtitle() != null) {
             subtitleTextView.setVisibility(View.VISIBLE);
             subtitleTextView.setText(storyHeaderInfo.getSubtitle());
+        } else {
+            subtitleTextView.setVisibility(View.GONE);
         }
+
         if (storiesList.get(counter).getDate() != null) {
             titleTextView.setText(titleTextView.getText()
                     + " "
@@ -363,6 +382,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         private FragmentManager fragmentManager;
         private Bundle bundle;
         private StoryViewHeaderInfo storyViewHeaderInfo;
+        private ArrayList<StoryViewHeaderInfo> headingInfoList;
         private StoryClickListeners storyClickListeners;
 
         public Builder(FragmentManager fragmentManager) {
@@ -402,11 +422,16 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
                 return this;
             }
             storyView = new StoryView();
-            bundle.putSerializable(HEADER_INFO_KEY, storyViewHeaderInfo);
+            bundle.putSerializable(HEADER_INFO_KEY, headingInfoList != null ? headingInfoList : storyViewHeaderInfo);
             storyView.setArguments(bundle);
             if (storyClickListeners != null) {
                 storyView.setStoryClickListeners(storyClickListeners);
             }
+            return this;
+        }
+
+        public Builder setHeadingInfoList(ArrayList<StoryViewHeaderInfo> headingInfoList) {
+            this.headingInfoList = headingInfoList;
             return this;
         }
 

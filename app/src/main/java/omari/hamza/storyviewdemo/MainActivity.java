@@ -16,6 +16,7 @@ import java.util.Date;
 import omari.hamza.storyview.StoryView;
 import omari.hamza.storyview.callback.StoryClickListeners;
 import omari.hamza.storyview.model.MyStory;
+import omari.hamza.storyview.utils.StoryViewHeaderInfo;
 import omari.hamza.storyviewdemo.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             MyStory story1 = new MyStory(
                     "https://www.spruch-des-tages.org/images/sprueche/nimm-dir-zeit-fuer-die-dinge-die-dich-gluecklich-machen.jpg",
-                    simpleDateFormat.parse("26-10-2019 10:00:00")
+                    simpleDateFormat.parse("20-10-2019 10:00:00")
             );
             myStories.add(story1);
         } catch (ParseException e) {
@@ -59,13 +60,12 @@ public class MainActivity extends AppCompatActivity {
         );
         myStories.add(story3);
 
-
         new StoryView.Builder(getSupportFragmentManager())
                 .setStoriesList(myStories)
+                .setStoryDuration(5000)
                 .setTitleText("Hamza Al-Omari")
                 .setSubtitleText("Damascus")
                 .setTitleLogoUrl("https://scontent-amt2-1.xx.fbcdn.net/v/t1.0-1/p160x160/39992298_1709076109202448_8167947883299995648_n.jpg?_nc_cat=106&_nc_oc=AQmES4AmTCqzNzXatJvOBc5U2ZyU8SNxwkeZmxUmZIt96pNdKjPCsHG1MJfbN_SJ6eU&_nc_ht=scontent-amt2-1.xx&oh=8063cb8bdd3c01b71cb920f22dc8c081&oe=5E201FFB")
-                .setStoryDuration(5000)
                 .setStoryClickListeners(new StoryClickListeners() {
                     @Override
                     public void onDescriptionClickListener(int position) {
