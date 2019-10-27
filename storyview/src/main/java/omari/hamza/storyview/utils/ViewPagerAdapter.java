@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,14 +55,20 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        MyStory currentPair = images.get(position);
+        MyStory currentStory = images.get(position);
 
         final View view = inflater.inflate(R.layout.layout_story_item, collection, false);
 
         final ImageView mImageView = view.findViewById(R.id.mImageView);
 
+        if (currentStory.getDescription() != null) {
+            TextView textView = view.findViewById(R.id.descriptionTextView);
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(currentStory.getDescription());
+        }
+
         Glide.with(context)
-                .load(currentPair.getUrl())
+                .load(currentStory.getUrl())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
