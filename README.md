@@ -27,35 +27,7 @@ dependencies {
 #### 2. Create the StoryView
 
 ```
-        ArrayList<String> images = new ArrayList<>(Arrays.asList(
-                "LINK A",
-                "LINK B",
-                "LINK C")
-        );
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-
-
-        ArrayList<Date> dates = null;
-        try {
-            dates = new ArrayList<>(Arrays.asList(
-                    simpleDateFormat.parse("26-10-2019 10:00:00"),
-                    simpleDateFormat.parse("26-10-2019 15:00:00"),
-                    simpleDateFormat.parse("25-10-2019 20:00:00")
-            ));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        new StoryView.Builder(getSupportFragmentManager())
-                .setImages(images)
-                .setTitleText("Hamza Al-Omari")
-                .setSubtitleText("Damascus")
-                .setDates(dates)
-                .setTitleLogoUrl("http://i.imgur.com/0BfsmUd.jpg")
-                .setStoryDuration(5000)
-                .build()
-                .show();
+        TO BE DOCUMENTED
  ```
  
  ## Credit 
