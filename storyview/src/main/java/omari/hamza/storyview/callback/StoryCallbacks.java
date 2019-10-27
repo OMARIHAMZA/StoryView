@@ -8,4 +8,6 @@ public interface StoryCallbacks {
 
     void nextStory();
 
+    void onDescriptionClickListener(int position);
+
 }

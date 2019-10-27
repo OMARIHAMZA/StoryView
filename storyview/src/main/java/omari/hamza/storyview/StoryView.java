@@ -3,6 +3,7 @@ package omari.hamza.storyview;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import omari.hamza.storyview.callback.StoryCallbacks;
+import omari.hamza.storyview.callback.StoryClickListeners;
 import omari.hamza.storyview.callback.TouchCallbacks;
 import omari.hamza.storyview.model.MyStory;
 import omari.hamza.storyview.progress.StoriesProgressView;
@@ -73,7 +75,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private int width, height;
     private float xValue = 0, yValue = 0;
 
-    private View.OnClickListener headerLogoOnClickListener;
+    private StoryClickListeners storyClickListeners;
 
     private StoryView() {
     }
@@ -135,8 +137,13 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
                 dismissAllowingStateLoss();
             }
         });
-        if (headerLogoOnClickListener != null) {
-            titleCardView.setOnClickListener(headerLogoOnClickListener);
+        if (storyClickListeners != null) {
+            titleCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    storyClickListeners.onTitleIconClickListener(counter);
+                }
+            });
         }
     }
 
@@ -196,6 +203,12 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         mViewPager.setCurrentItem(++counter, false);
         storiesProgressView.startStories(counter);
         updateHeading();
+    }
+
+    @Override
+    public void onDescriptionClickListener(int position) {
+        if (storyClickListeners == null) return;
+        storyClickListeners.onDescriptionClickListener(position);
     }
 
     @Override
@@ -320,12 +333,16 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         if (isDownClick && elapsedTime < 500) {
             stopTimer();
             if (((int) (height - yValue) <= 0.8 * height)) {
-                if ((int) xValue <= (width / 2)) {
-                    //Left
-                    previousStory();
-                } else {
-                    //Right
-                    nextStory();
+                if ((!TextUtils.isEmpty(storiesList.get(counter).getDescription())
+                        && ((int) (height - yValue) >= 0.2 * height)
+                        || TextUtils.isEmpty(storiesList.get(counter).getDescription()))) {
+                    if ((int) xValue <= (width / 2)) {
+                        //Left
+                        previousStory();
+                    } else {
+                        //Right
+                        nextStory();
+                    }
                 }
             }
         } else {
@@ -336,8 +353,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         elapsedTime = 0;
     }
 
-    public void setHeaderLogoOnClickListener(View.OnClickListener headerLogoOnClickListener) {
-        this.headerLogoOnClickListener = headerLogoOnClickListener;
+    public void setStoryClickListeners(StoryClickListeners storyClickListeners) {
+        this.storyClickListeners = storyClickListeners;
     }
 
     public static class Builder {
@@ -346,7 +363,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         private FragmentManager fragmentManager;
         private Bundle bundle;
         private StoryViewHeaderInfo storyViewHeaderInfo;
-        private View.OnClickListener headerLogoClickListener;
+        private StoryClickListeners storyClickListeners;
 
         public Builder(FragmentManager fragmentManager) {
             this.fragmentManager = fragmentManager;
@@ -387,14 +404,14 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             storyView = new StoryView();
             bundle.putSerializable(HEADER_INFO_KEY, storyViewHeaderInfo);
             storyView.setArguments(bundle);
-            if (headerLogoClickListener != null) {
-                storyView.setHeaderLogoOnClickListener(headerLogoClickListener);
+            if (storyClickListeners != null) {
+                storyView.setStoryClickListeners(storyClickListeners);
             }
             return this;
         }
 
-        public Builder setHeaderLogoClickListener(View.OnClickListener onClickListener) {
-            this.headerLogoClickListener = onClickListener;
+        public Builder setStoryClickListeners(StoryClickListeners storyClickListeners) {
+            this.storyClickListeners = storyClickListeners;
             return this;
         }
 

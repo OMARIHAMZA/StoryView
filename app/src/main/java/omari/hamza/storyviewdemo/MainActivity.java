@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import omari.hamza.storyview.StoryView;
+import omari.hamza.storyview.callback.StoryClickListeners;
 import omari.hamza.storyview.model.MyStory;
 import omari.hamza.storyviewdemo.databinding.ActivityMainBinding;
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showStories() {
 
-        ArrayList<MyStory> myStories = new ArrayList<>();
+        final ArrayList<MyStory> myStories = new ArrayList<>();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
@@ -65,10 +66,14 @@ public class MainActivity extends AppCompatActivity {
                 .setSubtitleText("Damascus")
                 .setTitleLogoUrl("https://scontent-amt2-1.xx.fbcdn.net/v/t1.0-1/p160x160/39992298_1709076109202448_8167947883299995648_n.jpg?_nc_cat=106&_nc_oc=AQmES4AmTCqzNzXatJvOBc5U2ZyU8SNxwkeZmxUmZIt96pNdKjPCsHG1MJfbN_SJ6eU&_nc_ht=scontent-amt2-1.xx&oh=8063cb8bdd3c01b71cb920f22dc8c081&oe=5E201FFB")
                 .setStoryDuration(5000)
-                .setHeaderLogoClickListener(new View.OnClickListener() {
+                .setStoryClickListeners(new StoryClickListeners() {
                     @Override
-                    public void onClick(View v) {
-                        Toast.makeText(MainActivity.this, "Hey", Toast.LENGTH_SHORT).show();
+                    public void onDescriptionClickListener(int position) {
+                        Toast.makeText(MainActivity.this, "Clicked: " + myStories.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onTitleIconClickListener(int position) {
                     }
                 })
                 .build()

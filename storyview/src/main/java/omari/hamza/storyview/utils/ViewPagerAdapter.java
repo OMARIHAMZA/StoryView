@@ -52,7 +52,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup collection, int position) {
+    public Object instantiateItem(@NonNull ViewGroup collection, final int position) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -66,6 +66,12 @@ public class ViewPagerAdapter extends PagerAdapter {
             TextView textView = view.findViewById(R.id.descriptionTextView);
             textView.setVisibility(View.VISIBLE);
             textView.setText(currentStory.getDescription());
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    storyCallbacks.onDescriptionClickListener(position);
+                }
+            });
         }
 
         Glide.with(context)
