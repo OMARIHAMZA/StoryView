@@ -143,7 +143,7 @@ for (Story story : data) {
 
 ```
 
-#### B.3 Finally, pass the ArrayList<StoryViewHeaderInfo> to the Builder:
+##### B.3 Finally, pass the ArrayList<StoryViewHeaderInfo> to the Builder:
 	
 ```java
 new StoryView.Builder(getSupportFragmentManager())
