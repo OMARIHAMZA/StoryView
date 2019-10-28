@@ -40,8 +40,9 @@ You have to pass to the library's builder an ArrayList of 'MyStory' where MyStor
 
 * String description (Optional/Nullable): The description of the story which gets displayed as shown in the screenshot below:
 
-![Screenshots](images/screenshot1.jpg)
-
+<p align="center">
+<img src="images/screenshot1.jpg" width="300" height="500">
+</p>
 
 **If you don't want to display a description along with the image just pass the description as null or as an empty String and it will not be displayed.**
 
