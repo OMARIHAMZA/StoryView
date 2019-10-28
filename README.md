@@ -21,7 +21,7 @@ allprojects {
 Add the dependency:
 ```
 dependencies {
-	        implementation 'com.github.OMARIHAMZA:StoryView:1.0.1-alpha'
+	        implementation 'com.github.OMARIHAMZA:StoryView:1.0.2-alpha'
 	}
 ```
 #### 2. Create the StoryView
