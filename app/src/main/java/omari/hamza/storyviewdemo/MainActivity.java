@@ -1,7 +1,6 @@
 package omari.hamza.storyviewdemo;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +9,11 @@ import androidx.databinding.DataBindingUtil;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 
 import omari.hamza.storyview.StoryView;
+import omari.hamza.storyview.callback.OnStoryChangedCallback;
 import omari.hamza.storyview.callback.StoryClickListeners;
 import omari.hamza.storyview.model.MyStory;
-import omari.hamza.storyview.utils.StoryViewHeaderInfo;
 import omari.hamza.storyviewdemo.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             MyStory story1 = new MyStory(
-                    "https://www.spruch-des-tages.org/images/sprueche/nimm-dir-zeit-fuer-die-dinge-die-dich-gluecklich-machen.jpg",
+                    "https://media.pri.org/s3fs-public/styles/story_main/public/images/2019/09/092419-germany-climate.jpg?itok=P3FbPOp-",
                     simpleDateFormat.parse("20-10-2019 10:00:00")
             );
             myStories.add(story1);
@@ -76,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onTitleIconClickListener(int position) {
                     }
                 })
+                .setOnStoryChangedCallback(new OnStoryChangedCallback() {
+                    @Override
+                    public void storyChanged(int position) {
+                        Toast.makeText(MainActivity.this, position + "", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setStartingIndex(2)
                 .build()
                 .show();
 

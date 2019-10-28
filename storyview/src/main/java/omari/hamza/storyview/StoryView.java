@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import omari.hamza.storyview.callback.OnStoryChangedCallback;
 import omari.hamza.storyview.callback.StoryCallbacks;
 import omari.hamza.storyview.callback.StoryClickListeners;
 import omari.hamza.storyview.callback.TouchCallbacks;
@@ -55,11 +56,15 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private static final String HEADER_INFO_KEY = "HEADER_INFO";
 
+    private static final String STARTING_INDEX_TAG = "STARTING_INDEX";
+
     private StoriesProgressView storiesProgressView;
 
     private ViewPager mViewPager;
 
     private int counter = 0;
+
+    private int startingIndex = 0;
 
     //Heading
     private TextView titleTextView, subtitleTextView;
@@ -76,6 +81,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private float xValue = 0, yValue = 0;
 
     private StoryClickListeners storyClickListeners;
+    private OnStoryChangedCallback onStoryChangedCallback;
 
     private StoryView() {
     }
@@ -112,6 +118,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         assert getArguments() != null;
         storiesList = (ArrayList<MyStory>) getArguments().getSerializable(IMAGES_KEY);
         duration = getArguments().getLong(DURATION_KEY, 2000);
+        startingIndex = getArguments().getInt(STARTING_INDEX_TAG, 0);
     }
 
     private void setupViews(View view) {
@@ -125,23 +132,27 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         titleCardView = view.findViewById(R.id.titleCardView);
         closeImageButton = view.findViewById(R.id.imageButton);
         storiesProgressView.setStoriesListener(this);
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
-        closeImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissAllowingStateLoss();
-            }
-        });
+        mViewPager.setOnTouchListener((v, event) -> true);
+        closeImageButton.setOnClickListener(v -> dismissAllowingStateLoss());
         if (storyClickListeners != null) {
-            titleCardView.setOnClickListener(new View.OnClickListener() {
+            titleCardView.setOnClickListener(v -> storyClickListeners.onTitleIconClickListener(counter));
+        }
+
+        if (onStoryChangedCallback != null) {
+            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onClick(View v) {
-                    storyClickListeners.onTitleIconClickListener(counter);
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    onStoryChangedCallback.storyChanged(position);
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
                 }
             });
         }
@@ -176,7 +187,9 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     @Override
     public void startStories() {
-        storiesProgressView.startStories();
+        counter = startingIndex;
+        storiesProgressView.startStories(startingIndex);
+        mViewPager.setCurrentItem(startingIndex, false);
         updateHeading();
     }
 
@@ -275,39 +288,30 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
 
     private void createTimer() {
-        timerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isDownClick) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    elapsedTime += 100;
-                    if (elapsedTime >= 500 && !isPaused) {
-                        isPaused = true;
-                        if (getActivity() == null) return;
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                storiesProgressView.pause();
-                                setHeadingVisibility(View.GONE);
-                            }
-                        });
-                    }
+        timerThread = new Thread(() -> {
+            while (isDownClick) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                isPaused = false;
-                if (getActivity() == null) return;
-                if (elapsedTime < 500) return;
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setHeadingVisibility(View.VISIBLE);
-                        storiesProgressView.resume();
-                    }
-                });
+                elapsedTime += 100;
+                if (elapsedTime >= 500 && !isPaused) {
+                    isPaused = true;
+                    if (getActivity() == null) return;
+                    getActivity().runOnUiThread(() -> {
+                        storiesProgressView.pause();
+                        setHeadingVisibility(View.GONE);
+                    });
+                }
             }
+            isPaused = false;
+            if (getActivity() == null) return;
+            if (elapsedTime < 500) return;
+            getActivity().runOnUiThread(() -> {
+                setHeadingVisibility(View.VISIBLE);
+                storiesProgressView.resume();
+            });
         });
     }
 
@@ -376,6 +380,10 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         this.storyClickListeners = storyClickListeners;
     }
 
+    public void setOnStoryChangedCallback(OnStoryChangedCallback onStoryChangedCallback) {
+        this.onStoryChangedCallback = onStoryChangedCallback;
+    }
+
     public static class Builder {
 
         private StoryView storyView;
@@ -384,6 +392,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         private StoryViewHeaderInfo storyViewHeaderInfo;
         private ArrayList<StoryViewHeaderInfo> headingInfoList;
         private StoryClickListeners storyClickListeners;
+        private OnStoryChangedCallback onStoryChangedCallback;
 
         public Builder(FragmentManager fragmentManager) {
             this.fragmentManager = fragmentManager;
@@ -416,6 +425,11 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             return this;
         }
 
+        public Builder setStartingIndex(int index) {
+            bundle.putInt(STARTING_INDEX_TAG, index);
+            return this;
+        }
+
         public Builder build() {
             if (storyView != null) {
                 Log.e(TAG, "The StoryView has already been built!");
@@ -427,6 +441,14 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             if (storyClickListeners != null) {
                 storyView.setStoryClickListeners(storyClickListeners);
             }
+            if (onStoryChangedCallback != null) {
+                storyView.setOnStoryChangedCallback(onStoryChangedCallback);
+            }
+            return this;
+        }
+
+        public Builder setOnStoryChangedCallback(OnStoryChangedCallback onStoryChangedCallback) {
+            this.onStoryChangedCallback = onStoryChangedCallback;
             return this;
         }
 
