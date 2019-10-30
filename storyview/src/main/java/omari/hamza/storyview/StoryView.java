@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -46,7 +45,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private static final String TAG = StoryView.class.getSimpleName();
 
-    private ArrayList<MyStory> storiesList;
+    private ArrayList<MyStory> storiesList = new ArrayList<>();
 
     private final static String IMAGES_KEY = "IMAGES";
 
@@ -116,7 +115,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private void readArguments() {
         assert getArguments() != null;
-        storiesList = (ArrayList<MyStory>) getArguments().getSerializable(IMAGES_KEY);
+        storiesList = new ArrayList<>((ArrayList<MyStory>) getArguments().getSerializable(IMAGES_KEY));
         duration = getArguments().getLong(DURATION_KEY, 2000);
         startingIndex = getArguments().getInt(STARTING_INDEX_TAG, 0);
     }
