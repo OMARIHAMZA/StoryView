@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setStartingIndex(0)
+                .setRtl(true)
                 .build()
                 .show();
 

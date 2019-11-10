@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import omari.hamza.storyview.R;
 
-final class PausableProgressBar extends FrameLayout {
+public final class PausableProgressBar extends FrameLayout {
 
     /***
      * progress満了タイマーのデフォルト時間

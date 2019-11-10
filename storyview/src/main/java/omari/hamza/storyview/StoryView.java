@@ -57,6 +57,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
     private static final String STARTING_INDEX_TAG = "STARTING_INDEX";
 
+    private static final String IS_RTL_TAG = "IS_RTL";
+
     private StoriesProgressView storiesProgressView;
 
     private ViewPager mViewPager;
@@ -79,8 +81,11 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private int width, height;
     private float xValue = 0, yValue = 0;
 
+
     private StoryClickListeners storyClickListeners;
     private OnStoryChangedCallback onStoryChangedCallback;
+
+    private boolean isRtl;
 
     private StoryView() {
     }
@@ -104,6 +109,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         setupViews(view);
         readArguments();
         setupStories();
+
     }
 
     private void setupStories() {
@@ -154,6 +160,11 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
                 }
             });
+        }
+
+        if (isRtl){
+            storiesProgressView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            storiesProgressView.setRotation(180);
         }
     }
 
@@ -448,6 +459,11 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
 
         public Builder setOnStoryChangedCallback(OnStoryChangedCallback onStoryChangedCallback) {
             this.onStoryChangedCallback = onStoryChangedCallback;
+            return this;
+        }
+
+        public Builder setRtl(boolean isRtl) {
+            this.bundle.putBoolean(IS_RTL_TAG, isRtl);
             return this;
         }
 
