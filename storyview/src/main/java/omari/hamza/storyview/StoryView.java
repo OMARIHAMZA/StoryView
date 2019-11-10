@@ -106,8 +106,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         width = displaymetrics.widthPixels;
         height = displaymetrics.heightPixels;
         // Get field from view
-        setupViews(view);
         readArguments();
+        setupViews(view);
         setupStories();
 
     }
@@ -124,6 +124,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
         storiesList = new ArrayList<>((ArrayList<MyStory>) getArguments().getSerializable(IMAGES_KEY));
         duration = getArguments().getLong(DURATION_KEY, 2000);
         startingIndex = getArguments().getInt(STARTING_INDEX_TAG, 0);
+        isRtl = getArguments().getBoolean(IS_RTL_TAG, false);
     }
 
     private void setupViews(View view) {
