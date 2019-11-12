@@ -163,7 +163,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
             });
         }
 
-        if (isRtl){
+        if (isRtl) {
             storiesProgressView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
             storiesProgressView.setRotation(180);
         }
@@ -372,10 +372,18 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
                         || TextUtils.isEmpty(storiesList.get(counter).getDescription()))) {
                     if ((int) xValue <= (width / 2)) {
                         //Left
-                        previousStory();
+                        if (isRtl) {
+                            nextStory();
+                        } else {
+                            previousStory();
+                        }
                     } else {
                         //Right
-                        nextStory();
+                        if (isRtl) {
+                            previousStory();
+                        } else {
+                            nextStory();
+                        }
                     }
                 }
             }
