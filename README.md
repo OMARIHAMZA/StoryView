@@ -8,6 +8,7 @@
 
 ## Release notes
 
+* V1.0.6-alpha: RTL Support
 * V1.0.2-alpha: Migrated to Java 8, Added OnStoryChangedListener, and Starting the stories from a predefined index
 
 ## Setup
