@@ -66,6 +66,8 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     private int counter = 0;
 
     private int startingIndex = 0;
+    
+    private boolean isHeadlessLogoMode = false;
 
     //Heading
     private TextView titleTextView, subtitleTextView;
@@ -265,6 +267,7 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
                     .into(titleIconImageView);
         } else {
             titleCardView.setVisibility(View.GONE);
+            isHeadlessLogoMode = true;
         }
 
         if (storyHeaderInfo.getTitle() != null) {
@@ -290,9 +293,16 @@ public class StoryView extends DialogFragment implements StoriesProgressView.Sto
     }
 
     private void setHeadingVisibility(int visibility) {
-        titleTextView.setVisibility(visibility);
-        titleCardView.setVisibility(visibility);
-        subtitleTextView.setVisibility(visibility);
+         if (isHeadlessLogoMode && visibility == View.VISIBLE) {
+            titleTextView.setVisibility(View.GONE);
+            titleCardView.setVisibility(View.GONE);
+            subtitleTextView.setVisibility(View.GONE);
+        } else {
+            titleTextView.setVisibility(visibility);
+            titleCardView.setVisibility(visibility);
+            subtitleTextView.setVisibility(visibility);
+        }
+            
         closeImageButton.setVisibility(visibility);
         storiesProgressView.setVisibility(visibility);
     }
